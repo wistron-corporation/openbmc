@@ -1,6 +1,7 @@
 MBOXD_FLASH_SIZE:ibm-ac-server = "64M"
 MBOXD_FLASH_SIZE:mihawk = "64M"
 MBOXD_FLASH_SIZE:p10bmc = "64M"
+MBOXD_FLASH_SIZE:mowgli = "64M"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 

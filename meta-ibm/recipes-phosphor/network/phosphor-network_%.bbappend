@@ -32,3 +32,8 @@ SRC_URI:append:witherspoon-tacoma = " file://inventory-object-map.json"
 do_install:append:witherspoon-tacoma(){
     install_network_configuration
 }
+
+SRC_URI:append:mowgli = " file://inventory-object-map.json"
+do_install:append:mowgli(){
+    install_network_configuration
+}

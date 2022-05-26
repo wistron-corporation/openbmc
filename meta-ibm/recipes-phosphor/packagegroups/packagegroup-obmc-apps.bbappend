@@ -27,6 +27,8 @@ EXTRA_IBM_LOGGING_PKGS:p10bmc = " \
 RDEPENDS:${PN}-inventory:append:ibm-ac-server = " openpower-fru-vpd openpower-occ-control phosphor-cooling-type virtual/obmc-gpio-presence"
 RDEPENDS:${PN}-inventory:append:p10bmc = " openpower-fru-vpd openpower-occ-control virtual/obmc-gpio-presence"
 RDEPENDS:${PN}-inventory:append:mihawk = " openpower-fru-vpd openpower-occ-control virtual/obmc-gpio-presence id-button phosphor-cooling-type"
+RDEPENDS:${PN}-inventory:append:mowgli = " openpower-fru-vpd openpower-occ-control virtual/obmc-gpio-presence id-button"
+
 RDEPENDS:${PN}-fan-control:append:ibm-ac-server = " fan-watchdog"
 RDEPENDS:${PN}-fan-control:append:p10bmc = " fan-watchdog sensor-monitor"
 RDEPENDS:${PN}-extras:append:ibm-ac-server = " ${POWER_SERVICE_PACKAGES_AC_SERVER} witherspoon-power-supply-sync"
@@ -34,6 +36,7 @@ RDEPENDS:${PN}-extras:append:p10bmc = " ${POWER_SERVICE_PACKAGES_P10} webui-vue 
 RDEPENDS:${PN}-extras:append:p10bmc = " pldm openpower-hw-diags srvcfg-manager biosconfig-manager phosphor-post-code-manager phosphor-host-postd debug-trigger libmctp"
 RDEPENDS:${PN}-extras:append:mihawk = " phosphor-webui phosphor-image-signing wistron-ipmi-oem ${POWER_SERVICE_PACKAGES_AC_SERVER}"
 RDEPENDS:${PN}-extras:append:witherspoon-tacoma = " pldm srvcfg-manager webui-vue biosconfig-manager phosphor-post-code-manager phosphor-host-postd kexec-tools makedumpfile kdump vmcore-dmesg debug-trigger"
+RDEPENDS:${PN}-extras:append:mowgli = " webui-vue phosphor-image-signing ${POWER_SERVICE_PACKAGES_AC_SERVER}"
 
 RDEPENDS:${PN}-extras:remove:p10bmc = "obmc-ikvm liberation-fonts uart-render-controller"
 RDEPENDS:${PN}-host-state-mgmt:remove:p10bmc = "checkstop-monitor"
@@ -41,5 +44,6 @@ RDEPENDS:${PN}-extras:remove:swift = "obmc-ikvm"
 RDEPENDS:${PN}-extras:remove:witherspoon-tacoma = "obmc-ikvm liberation-fonts uart-render-controller"
 RDEPENDS:${PN}-logging:append = " ${EXTRA_IBM_LOGGING_PKGS}"
 RDEPENDS:${PN}-leds:remove:witherspoon-tacoma = "phosphor-led-manager-faultmonitor"
+RDEPENDS:${PN}-extras:remove:mowgli = "phosphor-webui"
 
 ${PN}-software-extras:append:ibm-ac-server = " phosphor-software-manager-sync"

@@ -1,7 +1,8 @@
 #MACHINE ?= "mihawk"
+MACHINE ?= "mowgli"
 #MACHINE ?= "p10bmc"
 #MACHINE ?= "swift"
-MACHINE ??= "witherspoon"
+#MACHINE ??= "witherspoon"
 DISTRO ?= "openbmc-openpower"
 PACKAGE_CLASSES ?= "package_ipk"
 SANITY_TESTED_DISTROS:append ?= " *"
@@ -18,3 +19,5 @@ BB_DISKMON_DIRS ??= "\
     ABORT,${SSTATE_DIR},100M,1K \
     ABORT,/tmp,10M,1K"
 CONF_VERSION = "2"
+#IMAGE_INSTALL:append = " ipmitool " 
+IMAGE_INSTALL:append = " curl " 

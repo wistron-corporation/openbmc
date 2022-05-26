@@ -2,6 +2,7 @@ OBMC_IMAGE_EXTRA_INSTALL:append:ibm-ac-server = " mboxd max31785-msl phosphor-ms
 OBMC_IMAGE_EXTRA_INSTALL:append:p10bmc = " mboxd ibmtpm2tss"
 OBMC_IMAGE_EXTRA_INSTALL:append:witherspoon-tacoma = " ibmtpm2tss"
 OBMC_IMAGE_EXTRA_INSTALL:append:mihawk = " mboxd liberation-fonts uart-render-controller "
+OBMC_IMAGE_EXTRA_INSTALL:append:mowgli = " mboxd liberation-fonts uart-render-controller first-boot-set-mac"
 
 # remove so things fit in available flash space
 IMAGE_FEATURES:remove:witherspoon = "obmc-user-mgmt-ldap"
