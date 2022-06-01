@@ -69,6 +69,7 @@ require conf/distro/include/no-static-libs.inc
 require conf/distro/include/yocto-uninative.inc
 
 DISTRO_NAME = "Phosphor OpenBMC (Phosphor OpenBMC Project Reference Distro)"
+DISTRO_VERSION = "0.1.3"
 TARGET_VENDOR="-openbmc"
 
 VIRTUAL-RUNTIME_keymaps = ""

@@ -1,1 +1,1 @@
-SYSTEMD_SERVICE:${PN}:append:mowgli = " first-boot-set-mac@eth0.service"
+SYSTEMD_SERVICE:${PN}:append:mowgli = " first-boot-set-mac@eth0.service first-boot-set-mac@eth1.service"

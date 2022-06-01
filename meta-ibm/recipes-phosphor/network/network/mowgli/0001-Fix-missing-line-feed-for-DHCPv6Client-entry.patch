@@ -1,0 +1,33 @@
+From b353ba0dcf4aec7f68b8ff08800679f7f150fb81 Mon Sep 17 00:00:00 2001
+From: Johnathan Mantey <johnathanx.mantey@intel.com>
+Date: Thu, 9 Dec 2021 12:27:32 -0800
+Subject: [PATCH] Fix missing line-feed for DHCPv6Client entry
+
+Insertion of the DHCPv6Client causes subsequent systemd.network
+entries to be parsed incorrectly. When a static address is configured
+the "[Address]" section trails the DHCPv6Client line. The missing "\n"
+prevents the static address from being honored.
+
+Tested:
+Assigned a static IPv4 address.
+Prior to this commit the IPv4 address does not get assigned.
+After applying this commit the static IPv4 address is assigned.
+
+Change-Id: I416cba3d3b561baeab6d3ed88830602d9206fe86
+Signed-off-by: Johnathan Mantey <johnathanx.mantey@intel.com>
+---
+ src/ethernet_interface.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/ethernet_interface.cpp b/src/ethernet_interface.cpp
+index 44f46f6f..43a8ee04 100644
+--- a/src/ethernet_interface.cpp
++++ b/src/ethernet_interface.cpp
+@@ -1126,6 +1126,7 @@ void EthernetInterface::writeConfigurationFile()
+     stream << "[IPv6AcceptRA]\n";
+     stream << "DHCPv6Client=";
+     stream << (dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false");
++    stream << "\n";
+ 
+     // Static IP addresses
+     for (const auto& addr : addrs)
