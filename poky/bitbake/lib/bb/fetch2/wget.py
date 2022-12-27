@@ -106,10 +106,9 @@ class Wget(FetchMethod):
 
         fetchcmd = self.basecmd
 
-        if 'downloadfilename' in ud.parm:
-            localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
-            bb.utils.mkdirhier(os.path.dirname(localpath))
-            fetchcmd += " -O %s" % shlex.quote(localpath)
+        localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile) + ".tmp"
+        bb.utils.mkdirhier(os.path.dirname(localpath))
+        fetchcmd += " -O %s" % shlex.quote(localpath)
 
         if ud.user and ud.pswd:
             fetchcmd += " --auth-no-challenge"
@@ -132,6 +131,15 @@ class Wget(FetchMethod):
             fetchcmd += d.expand(" -P ${DL_DIR} '%s'" % uri)
 
         self._runwget(ud, d, fetchcmd, False)
+
+        # Try and verify any checksum now, meaning if it isn't correct, we don't remove the
+        # original file, which might be a race (imagine two recipes referencing the same
+        # source, one with an incorrect checksum)
+        bb.fetch2.verify_checksum(ud, d, localpath=localpath, fatal_nochecksum=False)
+
+        # Remove the ".tmp" and move the file into position atomically
+        # Our lock prevents multiple writers but mirroring code may grab incomplete files
+        os.rename(localpath, localpath[:-4])
 
         # Sanity check since wget can pretend it succeed when it didn't
         # Also, this used to happen if sourceforge sent us to the mirror page

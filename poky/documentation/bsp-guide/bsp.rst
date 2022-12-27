@@ -1,8 +1,8 @@
 .. SPDX-License-Identifier: CC-BY-SA-2.0-UK
 
-************************************************
-Board Support Packages (BSP) - Developer's Guide
-************************************************
+**************************************************
+Board Support Packages (BSP) --- Developer's Guide
+**************************************************
 
 A Board Support Package (BSP) is a collection of information that
 defines how to support a particular hardware device, set of devices, or
@@ -109,8 +109,7 @@ them to the "Dependencies" section.
 
 Some layers function as a layer to hold other BSP layers. These layers
 are known as ":term:`container layers <Container Layer>`". An example of
-this type of layer is OpenEmbedded's
-`meta-openembedded <https://github.com/openembedded/meta-openembedded>`__
+this type of layer is OpenEmbedded's :oe_git:`meta-openbedded </meta-openembedded>`
 layer. The ``meta-openembedded`` layer contains many ``meta-*`` layers.
 In cases like this, you need to include the names of the actual layers
 you want to work with, such as::
@@ -725,6 +724,7 @@ workflow.
 
 .. image:: figures/bsp-dev-flow.png
    :align: center
+   :width: 70%
 
 #. *Set up Your Host Development System to Support Development Using the
    Yocto Project*: See the ":ref:`dev-manual/start:preparing the build host`"
@@ -1356,7 +1356,7 @@ Project Reference Manual.
 -  :term:`EXTRA_IMAGECMD`:
    Specifies additional options for image creation commands. In this
    example, the "-lnp " option is used when creating the
-   `JFFS2 <https://en.wikipedia.org/wiki/JFFS2>`__ image.
+   :wikipedia:`JFFS2 <JFFS2>` image.
 
 -  :term:`WKS_FILE`: The location of
    the :ref:`Wic kickstart <ref-manual/kickstart:openembedded kickstart (\`\`.wks\`\`) reference>` file used

@@ -8,6 +8,7 @@ PTESTS_FAST = "\
     apr-ptest \
     apr-util-ptest \
     attr-ptest \
+    bc-ptest \
     bluez5-ptest \
     bzip2-ptest \
     diffstat-ptest \
@@ -22,6 +23,7 @@ PTESTS_FAST = "\
     gettext-ptest \
     glib-networking-ptest \
     gzip-ptest \
+    json-c-ptest \
     json-glib-ptest \
     libconvert-asn1-perl-ptest \
     liberror-perl-ptest \
@@ -81,12 +83,14 @@ PTESTS_SLOW = "\
     babeltrace2-ptest \
     busybox-ptest \
     coreutils-ptest \
+    curl-ptest \
     dbus-ptest \
     e2fsprogs-ptest \
     findutils-ptest \
     glib-2.0-ptest \
     gstreamer1.0-ptest \
     libevent-ptest \
+    libgcrypt-ptest \
     lttng-tools-ptest \
     openssh-ptest \
     openssl-ptest \
@@ -101,6 +105,7 @@ PTESTS_SLOW = "\
 
 PTESTS_SLOW:remove:riscv64 = "valgrind-ptest"
 PTESTS_PROBLEMS:append:riscv64 = "valgrind-ptest"
+PTESTS_SLOW:append:libc-musl = " libc-test-ptest"
 
 #    ruby-ptest \ # Timeout
 #    lz4-ptest \ # Needs a rewrite

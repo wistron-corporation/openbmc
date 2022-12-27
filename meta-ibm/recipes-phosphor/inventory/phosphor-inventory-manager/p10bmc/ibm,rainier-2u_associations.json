@@ -317,6 +317,20 @@
                 {
                     "types":
                     {
+                        "rType": "chassis",
+                        "fType": "input_history"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply0_input_power/average",
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply0_input_power/maximum",
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply1_input_power/average",
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply1_input_power/maximum"
+                    ]
+                },
+                {
+                    "types":
+                    {
                         "rType": "inventory",
                         "fType": "assembly"
                     },
@@ -377,6 +391,18 @@
                 {
                     "types":
                     {
+                        "rType": "inventory",
+                        "fType": "input_history"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply0_input_power/average",
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply0_input_power/maximum"
+                    ]
+                },
+                {
+                    "types":
+                    {
                         "rType": "fault_inventory_object",
                         "fType": "fault_led_group"
                     },
@@ -399,8 +425,8 @@
                 {
                     "types":
                     {
-                        "rType": "inventory",
-                        "fType": "chassis"
+                        "rType": "powered_by",
+                        "fType": "powering"
                     },
                     "paths":
                     [
@@ -433,6 +459,18 @@
                 {
                     "types":
                     {
+                        "rType": "inventory",
+                        "fType": "input_history"
+                    },
+                    "paths":
+                    [
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply1_input_power/average",
+                        "/org/open_power/sensors/aggregation/per_30s/powersupply1_input_power/maximum"
+                    ]
+                },
+                {
+                    "types":
+                    {
                         "rType": "fault_inventory_object",
                         "fType": "fault_led_group"
                     },
@@ -455,8 +493,8 @@
                 {
                     "types":
                     {
-                        "rType": "inventory",
-                        "fType": "chassis"
+                        "rType": "powered_by",
+                        "fType": "powering"
                     },
                     "paths":
                     [

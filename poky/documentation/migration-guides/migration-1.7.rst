@@ -31,7 +31,7 @@ build host is now 1.7.8 because the ``--list`` option is now required by
 BitBake's Git fetcher. As always, if your host distribution does not
 provide a version of Git that meets this requirement, you can use the
 ``buildtools-tarball`` that does. See the
-":ref:`ref-manual/system-requirements:required git, tar, python and gcc versions`"
+":ref:`ref-manual/system-requirements:required git, tar, python, make and gcc versions`"
 section for more information.
 
 .. _migration-1.7-autotools-class-changes:
@@ -42,7 +42,7 @@ Autotools Class Changes
 The following :ref:`autotools <ref-classes-autotools>` class changes
 occurred:
 
--  *A separate build directory is now used by default:* The
+-  *A separate :term:`Build Directory` is now used by default:* The
    :ref:`autotools <ref-classes-autotools>` class has been
    changed to use a directory for building
    (:term:`B`), which is separate from the source directory
@@ -165,7 +165,7 @@ The following changes have occurred to the QA check process:
    more parallel execution. This change is unlikely to be an issue
    except for highly customized recipes that disable packaging tasks
    themselves by marking them as ``noexec``. For those packages, you
-   will need to disable the ``do_package_qa`` task as well.
+   will need to disable the :ref:`ref-tasks-package_qa` task as well.
 
 -  Files being overwritten during the
    :ref:`ref-tasks-populate_sysroot` task now

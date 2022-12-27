@@ -1,4 +1,6 @@
 #
+# Copyright OpenEmbedded Contributors
+#
 # SPDX-License-Identifier: GPL-2.0-only
 #
 from abc import ABCMeta, abstractmethod
@@ -171,14 +173,8 @@ class Rootfs(object, metaclass=ABCMeta):
         bb.utils.rename(self.image_rootfs + '-orig', self.image_rootfs)
 
     def _exec_shell_cmd(self, cmd):
-        fakerootcmd = self.d.getVar('FAKEROOT')
-        if fakerootcmd is not None:
-            exec_cmd = [fakerootcmd, cmd]
-        else:
-            exec_cmd = cmd
-
         try:
-            subprocess.check_output(exec_cmd, stderr=subprocess.STDOUT)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             return("Command '%s' returned %d:\n%s" % (e.cmd, e.returncode, e.output))
 
@@ -311,7 +307,7 @@ class Rootfs(object, metaclass=ABCMeta):
     def _check_for_kernel_modules(self, modules_dir):
         for root, dirs, files in os.walk(modules_dir, topdown=True):
             for name in files:
-                found_ko = name.endswith((".ko", ".ko.gz", ".ko.xz"))
+                found_ko = name.endswith((".ko", ".ko.gz", ".ko.xz", ".ko.zst"))
                 if found_ko:
                     return found_ko
         return False
@@ -323,17 +319,29 @@ class Rootfs(object, metaclass=ABCMeta):
             bb.note("No Kernel Modules found, not running depmod")
             return
 
-        kernel_abi_ver_file = oe.path.join(self.d.getVar('PKGDATA_DIR'), "kernel-depmod",
-                                           'kernel-abiversion')
-        if not os.path.exists(kernel_abi_ver_file):
-            bb.fatal("No kernel-abiversion file found (%s), cannot run depmod, aborting" % kernel_abi_ver_file)
+        pkgdatadir = self.d.getVar('PKGDATA_DIR')
 
-        kernel_ver = open(kernel_abi_ver_file).read().strip(' \n')
-        versioned_modules_dir = os.path.join(self.image_rootfs, modules_dir, kernel_ver)
+        # PKGDATA_DIR can include multiple kernels so we run depmod for each
+        # one of them.
+        for direntry in os.listdir(pkgdatadir):
+            match = re.match('(.*)-depmod', direntry)
+            if not match:
+                continue
+            kernel_package_name = match.group(1)
 
-        bb.utils.mkdirhier(versioned_modules_dir)
+            kernel_abi_ver_file = oe.path.join(pkgdatadir, direntry, kernel_package_name + '-abiversion')
+            if not os.path.exists(kernel_abi_ver_file):
+                bb.fatal("No kernel-abiversion file found (%s), cannot run depmod, aborting" % kernel_abi_ver_file)
 
-        self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs, kernel_ver])
+            with open(kernel_abi_ver_file) as f:
+                kernel_ver = f.read().strip(' \n')
+
+            versioned_modules_dir = os.path.join(self.image_rootfs, modules_dir, kernel_ver)
+
+            bb.utils.mkdirhier(versioned_modules_dir)
+
+            bb.note("Running depmodwrapper for %s ..." % versioned_modules_dir)
+            self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs, kernel_ver, kernel_package_name])
 
     """
     Create devfs:
@@ -382,6 +390,10 @@ def create_rootfs(d, manifest_dir=None, progress_reporter=None, logcatcher=None)
 
 
 def image_list_installed_packages(d, rootfs_dir=None):
+    # Theres no rootfs for baremetal images
+    if bb.data.inherits_class('baremetal-image', d):
+        return ""
+
     if not rootfs_dir:
         rootfs_dir = d.getVar('IMAGE_ROOTFS')
 

@@ -1,11 +1,17 @@
 .. SPDX-License-Identifier: CC-BY-SA-2.0-UK
 
-******************************
-Customizing the Extensible SDK
-******************************
+***************************************************
+Customizing the Extensible SDK standalone installer
+***************************************************
 
 This appendix describes customizations you can apply to the extensible
-SDK.
+SDK when using in the standalone installer version.
+
+.. note::
+
+   It is also possible to use the Extensible SDK functionality directly in a
+   Yocto build, avoiding separate installer artefacts. Please refer to
+   ":ref:`sdk-manual/extensible:Installing the Extensible SDK`"
 
 Configuring the Extensible SDK
 ==============================
@@ -170,9 +176,8 @@ the installed SDKs to update the installed SDKs by using the
 ``devtool sdk-update`` command:
 
 1. Create a directory that can be shared over HTTP or HTTPS. You can do
-   this by setting up a web server such as an `Apache HTTP
-   Server <https://en.wikipedia.org/wiki/Apache_HTTP_Server>`__ or
-   `Nginx <https://en.wikipedia.org/wiki/Nginx>`__ server in the cloud
+   this by setting up a web server such as an :wikipedia:`Apache HTTP Server
+   <Apache_HTTP_Server>` or :wikipedia:`Nginx <Nginx>` server in the cloud
    to host the directory. This directory must contain the published SDK.
 
 2. Set the
@@ -256,9 +261,8 @@ source, you need to do a number of things:
 
 2. Expose the ``sstate-cache`` directory produced by the build.
    Typically, you expose this directory by making it available through
-   an `Apache HTTP
-   Server <https://en.wikipedia.org/wiki/Apache_HTTP_Server>`__ or
-   `Nginx <https://en.wikipedia.org/wiki/Nginx>`__ server.
+   an :wikipedia:`Apache HTTP Server <Apache_HTTP_Server>` or
+   :wikipedia:`Nginx <Nginx>` server.
 
 3. Set the appropriate configuration so that the produced SDK knows how
    to find the configuration. The variable you need to set is
@@ -280,9 +284,8 @@ source, you need to do a number of things:
          ESDK_LOCALCONF_ALLOW = "SSTATE_MIRRORS"
 
    -  Alternatively, if you just want to set the :term:`SSTATE_MIRRORS`
-      variable's value for the SDK alone, create a
-      ``conf/sdk-extra.conf`` file either in your
-      :term:`Build Directory` or within any
+      variable's value for the SDK alone, create a ``conf/sdk-extra.conf``
+      file either in your :term:`Build Directory` or within any
       layer and put your :term:`SSTATE_MIRRORS` setting within that file.
 
       .. note::

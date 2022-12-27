@@ -70,7 +70,7 @@ Metadata Must Now Use Python 3 Syntax
 
 The metadata is now required to use Python 3 syntax. For help preparing
 metadata, see any of the many Python 3 porting guides available.
-Alternatively, you can reference the conversion commits for Bitbake and
+Alternatively, you can reference the conversion commits for BitBake and
 you can use :term:`OpenEmbedded-Core (OE-Core)` as a guide for changes. Following are
 particular areas of interest:
 
@@ -442,7 +442,7 @@ The following miscellaneous changes have occurred:
 -  :ref:`ref-classes-image`: Renamed COMPRESS(ION) to CONVERSION. This change
    means that ``COMPRESSIONTYPES``, ``COMPRESS_DEPENDS`` and
    ``COMPRESS_CMD`` are deprecated in favor of ``CONVERSIONTYPES``,
-   ``CONVERSION_DEPENDS`` and ``CONVERSION_CMD``. The ``COMPRESS*``
+   ``CONVERSION_DEPENDS`` and :term:`CONVERSION_CMD`. The ``COMPRESS*``
    variable names will still work in the 2.2 release but metadata that
    does not need to be backwards-compatible should be changed to use the
    new names as the ``COMPRESS*`` ones will be removed in a future

@@ -14,12 +14,13 @@ SRC_URI[sha256sum] = "841be9d788f00bab08ef22c4be5c39866f0e46cb100a3ae49ed816ac9c
 
 inherit autotools pkgconfig python3native ptest
 
-PACKAGECONFIG[tests] = "--enable-tests,--disable-tests,kmod udev glib-2.0 catch2,bats python3-packaging"
+PACKAGECONFIG[tests] = "--enable-tests,--disable-tests,kmod udev glib-2.0 catch2"
 PACKAGECONFIG[cxx] = "--enable-bindings-cxx,--disable-bindings-cxx"
 PACKAGECONFIG[python3] = "--enable-bindings-python,--disable-bindings-python,python3"
 
 # Enable cxx bindings by default.
-PACKAGECONFIG ?= "cxx"
+PACKAGECONFIG ?= "cxx \
+		  ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 
 # Always build tools - they don't have any additional
 # requirements over the library.
@@ -54,8 +55,7 @@ RRECOMMENDS:${PN}-ptest += " \
     coreutils \
     ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3-unittest', '', d)} \
 "
-
-PACKAGECONFIG:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'tests', '', d)}"
+RDEPENDS:${PN}-ptest += "bats python3-packaging"
 
 do_install_ptest() {
     install -d ${D}${PTEST_PATH}/tests

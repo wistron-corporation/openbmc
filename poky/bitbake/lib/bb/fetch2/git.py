@@ -243,7 +243,7 @@ class Git(FetchMethod):
             for name in ud.names:
                 ud.unresolvedrev[name] = 'HEAD'
 
-        ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0 -c gc.autoDetach=false"
+        ud.basecmd = d.getVar("FETCHCMD_git") or "git -c gc.autoDetach=false -c core.pager=cat"
 
         write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0"
         ud.write_tarballs = write_tarballs != "0" or ud.rebaseable
@@ -353,10 +353,15 @@ class Git(FetchMethod):
         if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
             ud.localpath = ud.fullshallow
             return
-        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clonedir):
-            bb.utils.mkdirhier(ud.clonedir)
-            runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
-
+        elif os.path.exists(ud.fullmirror) and self.need_update(ud, d):
+            if not os.path.exists(ud.clonedir):
+                bb.utils.mkdirhier(ud.clonedir)
+                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
+            else:
+                tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
+                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
+                fetch_cmd = "LANG=C %s fetch -f --progress %s " % (ud.basecmd, shlex.quote(tmpdir))
+                runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
         repourl = self._get_repo_url(ud)
 
         # If the repo still doesn't exist, fallback to cloning it
@@ -562,13 +567,12 @@ class Git(FetchMethod):
         source_found = False
         source_error = []
 
-        if not source_found:
-            clonedir_is_up_to_date = not self.clonedir_need_update(ud, d)
-            if clonedir_is_up_to_date:
-                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
-                source_found = True
-            else:
-                source_error.append("clone directory not available or not up to date: " + ud.clonedir)
+        clonedir_is_up_to_date = not self.clonedir_need_update(ud, d)
+        if clonedir_is_up_to_date:
+            runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
+            source_found = True
+        else:
+            source_error.append("clone directory not available or not up to date: " + ud.clonedir)
 
         if not source_found:
             if ud.shallow:
@@ -733,7 +737,7 @@ class Git(FetchMethod):
         Compute the HEAD revision for the url
         """
         if not d.getVar("__BBSEENSRCREV"):
-            raise bb.fetch2.FetchError("Recipe uses a floating tag/branch without a fixed SRCREV yet doesn't call bb.fetch2.get_srcrev() (use SRCPV in PV for OE).")
+            raise bb.fetch2.FetchError("Recipe uses a floating tag/branch '%s' for repo '%s' without a fixed SRCREV yet doesn't call bb.fetch2.get_srcrev() (use SRCPV in PV for OE)." % (ud.unresolvedrev[name], ud.host+ud.path))
 
         # Ensure we mark as not cached
         bb.fetch2.get_autorev(d)

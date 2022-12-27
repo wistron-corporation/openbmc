@@ -233,9 +233,9 @@ Separate build and source directories have been enabled by default for
 selected recipes where it is known to work and for all
 recipes that inherit the :ref:`cmake <ref-classes-cmake>` class. In
 future releases the :ref:`autotools <ref-classes-autotools>` class
-will enable a separate build directory by default as well. Recipes
+will enable a separate :term:`Build Directory` by default as well. Recipes
 building Autotools-based software that fails to build with a separate
-build directory should be changed to inherit from the
+:term:`Build Directory` should be changed to inherit from the
 :ref:`autotools-brokensep <ref-classes-autotools>` class instead of
 the ``autotools`` or ``autotools_stage``\ classes.
 
@@ -341,39 +341,39 @@ Removed and Renamed Recipes
 
 The following recipes have been removed:
 
--  ``packagegroup-toolset-native`` - This recipe is largely unused.
+-  ``packagegroup-toolset-native`` --- this recipe is largely unused.
 
--  ``linux-yocto-3.8`` - Support for the Linux yocto 3.8 kernel has been
+-  ``linux-yocto-3.8`` --- support for the Linux yocto 3.8 kernel has been
    dropped. Support for the 3.10 and 3.14 kernels have been added with
    the ``linux-yocto-3.10`` and ``linux-yocto-3.14`` recipes.
 
--  ``ocf-linux`` - This recipe has been functionally replaced using
+-  ``ocf-linux`` --- this recipe has been functionally replaced using
    ``cryptodev-linux``.
 
--  ``genext2fs`` - ``genext2fs`` is no longer used by the build system
+-  ``genext2fs`` --- ``genext2fs`` is no longer used by the build system
    and is unmaintained upstream.
 
--  ``js`` - This provided an ancient version of Mozilla's javascript
+-  ``js`` --- this provided an ancient version of Mozilla's javascript
    engine that is no longer needed.
 
--  ``zaurusd`` - The recipe has been moved to the ``meta-handheld``
+-  ``zaurusd`` --- the recipe has been moved to the ``meta-handheld``
    layer.
 
--  ``eglibc 2.17`` - Replaced by the ``eglibc 2.19`` recipe.
+-  ``eglibc 2.17`` --- replaced by the ``eglibc 2.19`` recipe.
 
--  ``gcc 4.7.2`` - Replaced by the now stable ``gcc 4.8.2``.
+-  ``gcc 4.7.2`` --- replaced by the now stable ``gcc 4.8.2``.
 
--  ``external-sourcery-toolchain`` - this recipe is now maintained in
+-  ``external-sourcery-toolchain`` --- this recipe is now maintained in
    the ``meta-sourcery`` layer.
 
--  ``linux-libc-headers-yocto 3.4+git`` - Now using version 3.10 of the
+-  ``linux-libc-headers-yocto 3.4+git`` --- now using version 3.10 of the
    ``linux-libc-headers`` by default.
 
--  ``meta-toolchain-gmae`` - This recipe is obsolete.
+-  ``meta-toolchain-gmae`` --- this recipe is obsolete.
 
--  ``packagegroup-core-sdk-gmae`` - This recipe is obsolete.
+-  ``packagegroup-core-sdk-gmae`` --- this recipe is obsolete.
 
--  ``packagegroup-core-standalone-gmae-sdk-target`` - This recipe is
+-  ``packagegroup-core-standalone-gmae-sdk-target`` --- this recipe is
    obsolete.
 
 .. _migration-1.6-removed-classes:

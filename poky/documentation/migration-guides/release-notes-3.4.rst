@@ -5,7 +5,7 @@ New Features / Enhancements in 3.4
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  Linux kernel 5.14, glibc 2.34 and ~280 other recipe upgrades
--  Switched override character to ':' (replacing '_') for more robust parsing and improved performance - see the above migration guide for help
+-  Switched override character to ':' (replacing '_') for more robust parsing and improved performance --- see the above migration guide for help
 -  Rust integrated into core, providing rust support for cross-compilation and SDK
 -  New create-spdx class for creating SPDX SBoM documents
 -  New recipes: cargo, core-image-ptest-all, core-image-ptest-fast, core-image-weston-sdk, erofs-utils, gcompat, gi-docgen, libmicrohttpd, libseccomp, libstd-rs, perlcross, python3-markdown, python3-pyyaml, python3-smartypants, python3-typogrify, rust, rust-cross, rust-cross-canadian, rust-hello-world, rust-llvm, rust-tools-cross-canadian, rustfmt, xwayland
@@ -36,7 +36,7 @@ New Features / Enhancements in 3.4
 
 -  Kernel-related enhancements:
 
-   -  Support zstd-compressed modules and initramfs images
+   -  Support zstd-compressed modules and :term:`Initramfs` images
    -  Allow opt-out of split kernel modules
    -  linux-yocto-dev: base AUTOREV on specified version
    -  kernel-yocto: provide debug / summary information for metadata
@@ -67,7 +67,7 @@ New Features / Enhancements in 3.4
 
 -  SDK-related enhancements:
 
-   -  Enable do_populate_sdk with multilibs
+   -  Enable :ref:`ref-tasks-populate_sdk` with multilibs
    -  New ``SDKPATHINSTALL`` variable decouples default install path from built in path to avoid rebuilding nativesdk components on e.g. :term:`DISTRO_VERSION` changes
    -  eSDK: Error if trying to generate an eSDK from a multiconfig
    -  eSDK: introduce :term:`TOOLCHAIN_HOST_TASK_ESDK` to be used in place of :term:`TOOLCHAIN_HOST_TASK` to add components to the host part of the eSDK
@@ -211,7 +211,7 @@ The following corrections have been made to the LICENSE values set by recipes:
 Other license-related notes:
 
 -  When creating recipes for Python software, recipetool will now treat "BSD" as "BSD-3-Clause" for the purposes of setting LICENSE, as that is the most common understanding.
--  Please be aware that an initramfs bundled with the kernel using :term:`INITRAMFS_IMAGE_BUNDLE` should only contain GPLv2-compatible software; this is now mentioned in the documentation.
+-  Please be aware that an :term:`Initramfs` bundled with the kernel using :term:`INITRAMFS_IMAGE_BUNDLE` should only contain GPLv2-compatible software; this is now mentioned in the documentation.
 
 Security Fixes in 3.4
 ~~~~~~~~~~~~~~~~~~~~~
@@ -721,7 +721,7 @@ Repositories / Downloads for 3.4
 
 poky
 
--  Repository Location: https://git.yoctoproject.org/poky/
+-  Repository Location: :yocto_git:`/poky`
 -  Branch: :yocto_git:`honister </poky/log/?h=honister>`
 -  Tag: :yocto_git:`yocto-3.4 </poky/tag/?h=yocto-3.4>`
 -  Git Revision: :yocto_git:`f6d1126fff213460dc6954a5d5fc168606d76b66 </poky/commit/?id=f6d1126fff213460dc6954a5d5fc168606d76b66>`
@@ -745,7 +745,7 @@ openembedded-core
 
 meta-mingw
 
--  Repository Location: https://git.yoctoproject.org/meta-mingw
+-  Repository Location: :yocto_git:`/meta-mingw`
 -  Branch: :yocto_git:`honister </meta-mingw/log/?h=honister>`
 -  Tag: :yocto_git:`yocto-3.4 </meta-mingw/tag/?h=yocto-3.4>`
 -  Git Revision: :yocto_git:`f5d761cbd5c957e4405c5d40b0c236d263c916a8 </meta-mingw/commit/?id=f5d761cbd5c957e4405c5d40b0c236d263c916a8>`
@@ -757,7 +757,7 @@ meta-mingw
 
 meta-intel
 
--  Repository Location: https://git.yoctoproject.org/meta-intel
+-  Repository Location: :yocto_git:`/meta-intel`
 -  Branch: :yocto_git:`honister </meta-intel/log/?h=honister>`
 -  Tag: :yocto_git:`yocto-3.4 </meta-intel/tag/?h=yocto-3.4>`
 -  Git Revision: :yocto_git:`90170cf85fe35b4e8dc00eee50053c0205276b63 </meta-intel/commit/?id=90170cf85fe35b4e8dc00eee50053c0205276b63>`
@@ -769,7 +769,7 @@ meta-intel
 
 meta-gplv2
 
--  Repository Location: https://git.yoctoproject.org/meta-gplv2
+-  Repository Location: :yocto_git:`/meta-gplv2`
 -  Branch: :yocto_git:`honister </meta-gplv2/log/?h=honister>`
 -  Tag: :yocto_git:`yocto-3.4 </meta-gplv2/tag/?h=yocto-3.4>`
 -  Git Revision: :yocto_git:`f04e4369bf9dd3385165281b9fa2ed1043b0e400 </meta-gplv2/commit/?id=f04e4369bf9dd3385165281b9fa2ed1043b0e400>`
@@ -793,7 +793,7 @@ bitbake
 
 yocto-docs
 
--  Repository Location: https://git.yoctoproject.org/yocto-docs
+-  Repository Location: :yocto_git:`/yocto-docs`
 -  Branch: :yocto_git:`honister </yocto-docs/log/?h=honister>`
 -  Tag: :yocto_git:`yocto-3.4 </yocto-docs/tag/?h=yocto-3.4>`
 -  Git Revision: :yocto_git:`d75c5450ecf56c8ac799a633ee9ac459e88f91fc </yocto-docs/commit/?id=d75c5450ecf56c8ac799a633ee9ac459e88f91fc>`

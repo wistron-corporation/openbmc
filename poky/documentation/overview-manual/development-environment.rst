@@ -39,10 +39,9 @@ Linus Torvalds in 1991. Conversely, a good example of a non-open source
 project is the Windows family of operating systems developed by
 Microsoft Corporation.
 
-Wikipedia has a good historical description of the Open Source
-Philosophy `here <https://en.wikipedia.org/wiki/Open_source>`__. You can
-also find helpful information on how to participate in the Linux
-Community
+Wikipedia has a good :wikipedia:`historical description of the Open Source
+Philosophy <Open_source>`. You can also find helpful information on how
+to participate in the Linux Community
 `here <https://www.kernel.org/doc/html/latest/process/index.html>`__.
 
 The Development Host
@@ -52,7 +51,7 @@ A development host or :term:`Build Host` is key to
 using the Yocto Project. Because the goal of the Yocto Project is to
 develop images or applications that run on embedded hardware,
 development of those images and applications generally takes place on a
-system not intended to run the software - the development host.
+system not intended to run the software --- the development host.
 
 You need to set up a development host in order to use it with the Yocto
 Project. Most find that it is best to have a native Linux machine
@@ -176,7 +175,7 @@ development:
    repositories for each of these areas.
 
    .. image:: figures/source-repos.png
-      :align: center
+      :width: 100%
 
    For steps on how to view and access these upstream Git repositories,
    see the ":ref:`dev-manual/start:accessing source repositories`"
@@ -191,6 +190,7 @@ development:
 
    .. image:: figures/index-downloads.png
       :align: center
+      :width: 50%
 
    For steps on how to view and access these files, see the
    ":ref:`dev-manual/start:accessing index of releases`"
@@ -205,7 +205,7 @@ development:
    :yocto_dl:`Index of /releases: </releases>` area.
 
    .. image:: figures/yp-download.png
-      :align: center
+      :width: 100%
 
    For steps on how to use the "DOWNLOADS" page, see the
    ":ref:`dev-manual/start:using the downloads page`"
@@ -607,26 +607,22 @@ licensing structures in place. License evolution for both Open Source
 and Free Software has an interesting history. If you are interested in
 this history, you can find basic information here:
 
--  `Open source license
-   history <https://en.wikipedia.org/wiki/Open-source_license>`__
+-  :wikipedia:`Open source license history <Open-source_license>`
 
--  `Free software license
-   history <https://en.wikipedia.org/wiki/Free_software_license>`__
+-  :wikipedia:`Free software license history <Free_software_license>`
 
 In general, the Yocto Project is broadly licensed under the
 Massachusetts Institute of Technology (MIT) License. MIT licensing
 permits the reuse of software within proprietary software as long as the
 license is distributed with that software. Patches to the Yocto Project
 follow the upstream licensing scheme. You can find information on the
-MIT license `here <https://en.wikipedia.org/wiki/MIT_License>`__.
+MIT license :wikipedia:`here <MIT_License>`.
 
 When you build an image using the Yocto Project, the build process uses
 a known list of licenses to ensure compliance. You can find this list in
-the :term:`Source Directory` at
-``meta/files/common-licenses``. Once the build completes, the list of
-all licenses found and used during that build are kept in the
-:term:`Build Directory` at
-``tmp/deploy/licenses``.
+the :term:`Source Directory` at ``meta/files/common-licenses``. Once the
+build completes, the list of all licenses found and used during that build
+are kept in the :term:`Build Directory` at ``tmp/deploy/licenses``.
 
 If a module requires a license that is not in the base list, the build
 process generates a warning during the build. These tools make it easier

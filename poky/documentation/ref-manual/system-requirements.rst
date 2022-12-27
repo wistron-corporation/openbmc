@@ -41,17 +41,13 @@ distributions:
 
 -  Ubuntu 20.04 (LTS)
 
+-  Ubuntu 22.04 (LTS)
+
 -  Fedora 34
 
 -  Fedora 35
 
--  CentOS 7.x
-
--  CentOS 8.x
-
 -  AlmaLinux 8.5
-
--  Debian GNU/Linux 9.x (Stretch)
 
 -  Debian GNU/Linux 10.x (Buster)
 
@@ -78,12 +74,12 @@ distributions:
       the supported platforms listed below.
 
    -  You may use Windows Subsystem For Linux v2 to set up a build host
-      using Windows 10, but validation is not performed against build
-      hosts using WSLv2.
+      using Windows 10 or later, or Windows Server 2019 or later, but validation
+      is not performed against build hosts using WSL 2.
 
-   -  The Yocto Project is not compatible with WSLv1, it is
-      compatible but not officially supported nor validated with
-      WSLv2, if you still decide to use WSL please upgrade to WSLv2.
+      See the
+      :ref:`dev-manual/start:setting up to use windows subsystem for linux (wsl 2)`
+      section in the Yocto Project Development Tasks Manual for more information.
 
    -  If you encounter problems, please go to :yocto_bugs:`Yocto Project
       Bugzilla <>` and submit a bug. We are
@@ -120,12 +116,6 @@ supported Ubuntu or Debian Linux distribution:
          $ sudo apt build-dep qemu
          $ sudo apt remove oss4-dev
 
-   -  For Debian-8, ``python3-git`` and ``pylint3`` are no longer
-      available via ``apt``.
-      ::
-
-         $ sudo pip3 install GitPython pylint==1.9.5
-
 -  *Essentials:* Packages needed to build an image on a headless system::
 
       $ sudo apt install &UBUNTU_HOST_PACKAGES_ESSENTIAL;
@@ -133,14 +123,8 @@ supported Ubuntu or Debian Linux distribution:
 -  *Documentation:* Packages needed if you are going to build out the
    Yocto Project documentation manuals::
 
-      $ sudo apt install make python3-pip
+      $ sudo apt install make python3-pip inkscape texlive-latex-extra
       &PIP3_HOST_PACKAGES_DOC;
-
-   .. note::
-
-      It is currently not possible to build out documentation from Debian 8
-      (Jessie) because of outdated ``pip3`` and ``python3``. ``python3-sphinx``
-      is too outdated.
 
 Fedora Packages
 ---------------
@@ -156,7 +140,7 @@ supported Fedora Linux distribution:
 -  *Documentation:* Packages needed if you are going to build out the
    Yocto Project documentation manuals::
 
-      $ sudo dnf install make python3-pip which
+      $ sudo dnf install make python3-pip which inkscape texlive-fncychap
       &PIP3_HOST_PACKAGES_DOC;
 
 openSUSE Packages
@@ -173,42 +157,15 @@ supported openSUSE Linux distribution:
 -  *Documentation:* Packages needed if you are going to build out the
    Yocto Project documentation manuals::
 
-      $ sudo zypper install make python3-pip which
+      $ sudo zypper install make python3-pip which inkscape texlive-fncychap
       &PIP3_HOST_PACKAGES_DOC;
 
 
-CentOS-7 Packages
------------------
+AlmaLinux-8 Packages
+--------------------
 
 Here are the required packages by function given a
-supported CentOS-7 Linux distribution:
-
--  *Essentials:* Packages needed to build an image for a headless
-   system::
-
-      $ sudo yum install &CENTOS7_HOST_PACKAGES_ESSENTIAL;
-
-   .. note::
-
-      -  Extra Packages for Enterprise Linux (i.e. ``epel-release``) is
-         a collection of packages from Fedora built on RHEL/CentOS for
-         easy installation of packages not included in enterprise Linux
-         by default. You need to install these packages separately.
-
-      -  The ``makecache`` command consumes additional Metadata from
-         ``epel-release``.
-
--  *Documentation:* Packages needed if you are going to build out the
-   Yocto Project documentation manuals::
-
-      $ sudo yum install make python3-pip which
-      &PIP3_HOST_PACKAGES_DOC;
-
-CentOS-8 Packages
------------------
-
-Here are the required packages by function given a
-supported CentOS-8 Linux distribution:
+supported AlmaLinux-8 Linux distribution:
 
 -  *Essentials:* Packages needed to build an image for a headless
    system::
@@ -231,11 +188,11 @@ supported CentOS-8 Linux distribution:
 -  *Documentation:* Packages needed if you are going to build out the
    Yocto Project documentation manuals::
 
-      $ sudo dnf install make python3-pip which
+      $ sudo dnf install make python3-pip which inkscape texlive-fncychap
       &PIP3_HOST_PACKAGES_DOC;
 
-Required Git, tar, Python and gcc Versions
-==========================================
+Required Git, tar, Python, make and gcc Versions
+================================================
 
 In order to use the build system, your host development system must meet
 the following version requirements for Git, tar, and Python:
@@ -245,6 +202,8 @@ the following version requirements for Git, tar, and Python:
 -  tar &MIN_TAR_VERSION; or greater
 
 -  Python &MIN_PYTHON_VERSION; or greater
+
+-  GNU make &MIN_MAKE_VERSION; or greater
 
 If your host development system does not meet all these requirements,
 you can resolve this by installing a ``buildtools`` tarball that
@@ -261,8 +220,13 @@ resolve this by installing a ``buildtools-extended`` tarball that
 contains additional tools, the equivalent of the Debian/Ubuntu ``build-essential``
 package.
 
+For systems with a broken make version (e.g. make 4.2.1 without patches) but
+where the rest of the host tools are usable, you can use the ``buildtools-make``
+tarball instead.
+
 In the sections that follow, three different methods will be described for
-installing the ``buildtools`` or ``buildtools-extended`` toolset.
+installing the ``buildtools``, ``buildtools-extended`` or ``buildtools-make``
+toolset.
 
 Installing a Pre-Built ``buildtools`` Tarball with ``install-buildtools`` script
 --------------------------------------------------------------------------------
@@ -297,6 +261,13 @@ installer and automatically installs the tools for you:
       $ cd poky
       $ scripts/install-buildtools
 
+   Alternatively if your host development system has a broken ``make``
+   version such that you only need a known good version of ``make``,
+   you can use the ``--make-only`` option:
+
+      $ cd poky
+      $ scripts/install-buildtools --make-only
+
 2. Source the tools environment setup script by using a command like the
    following::
 
@@ -330,6 +301,10 @@ steps:
    Here is an example for the extended installer::
 
       $ sh ~/Downloads/x86_64-buildtools-extended-nativesdk-standalone-&DISTRO;.sh
+
+   An example for the make-only installer::
+
+      $ sh ~/Downloads/x86_64-buildtools-make-nativesdk-standalone-&DISTRO;.sh
 
    During execution, a prompt appears that allows you to choose the
    installation directory. For example, you could choose the following:
@@ -376,6 +351,10 @@ installer:
 
       $ bitbake buildtools-extended-tarball
 
+   or to build the make-only tarball::
+
+      $ bitbake buildtools-make-tarball
+
    .. note::
 
       The :term:`SDKMACHINE` variable in your ``local.conf`` file determines
@@ -398,6 +377,10 @@ installer:
    Here is an example for the extended installer::
 
       $ sh ~/Downloads/x86_64-buildtools-extended-nativesdk-standalone-&DISTRO;.sh
+
+   or for the make-only installer::
+
+      $ sh ~/Downloads/x86_64-buildtools-make-nativesdk-standalone-&DISTRO;.sh
 
    During execution, a prompt appears that allows you to choose the
    installation directory. For example, you could choose the following:

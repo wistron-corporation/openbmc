@@ -1,4 +1,10 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+# SPDX-License-Identifier: MIT
+#
+
+#
 # Removes source after build
 #
 # To use it add that line to conf/local.conf:
@@ -106,6 +112,8 @@ do_rm_work () {
         fi
     done
 }
+do_rm_work[vardepsexclude] += "SSTATETASKS"
+
 do_rm_work_all () {
     :
 }

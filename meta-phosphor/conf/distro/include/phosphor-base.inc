@@ -1,5 +1,8 @@
 require conf/distro/include/phosphor-defaults.inc
 
+# Match the distro codename from upstream poky.
+DISTRO_CODENAME ?= "langdale"
+
 # Override these in poky based distros
 POKY_DEFAULT_DISTRO_FEATURES = "largefile opengl ptest multiarch wayland vulkan"
 POKY_DEFAULT_EXTRA_RDEPENDS = "packagegroup-core-boot"
@@ -116,6 +119,7 @@ include conf/distro/include/openbmc-phosphor/${MACHINE}.inc
 
 IMAGE_CLASSES:append = " image_types_phosphor phosphor-rootfs-postcommands"
 IMAGE_CLASSES:append:npcm7xx = " image_types_phosphor_nuvoton"
+IMAGE_CLASSES:append:npcm8xx = " image_types_phosphor_nuvoton_npcm8xx"
 
 IMAGE_INSTALL:append = " dbus-broker libnss-systemd"
 

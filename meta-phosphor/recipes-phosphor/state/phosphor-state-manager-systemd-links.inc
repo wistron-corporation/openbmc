@@ -1,7 +1,10 @@
 DEFAULT_TARGETS = " \
     multi-user.target.requires/obmc-host-reset@{}.target \
-    multi-user.target.requires/phosphor-discover-system-state@{}.service \
+    multi-user.target.wants/phosphor-discover-system-state@{}.service \
     obmc-chassis-poweron@{}.target.wants/phosphor-reset-host-recovery@{}.service \
+    obmc-chassis-poweron@{}.target.requires/obmc-power-start@{}.service \
+    obmc-chassis-poweroff@{}.target.requires/obmc-power-stop@{}.service \
+    obmc-chassis-poweroff@{}.target.requires/obmc-powered-off@{}.service \
     obmc-host-start@{}.target.requires/obmc-host-startmin@{}.target \
     obmc-host-start@{}.target.requires/phosphor-reset-host-reboot-attempts@{}.service \
     obmc-host-startmin@{}.target.wants/phosphor-set-host-transition-to-running@{}.service \
@@ -19,6 +22,9 @@ DEFAULT_TARGETS = " \
     obmc-host-force-warm-reboot@{}.target.requires/phosphor-reboot-host@{}.service \
     obmc-host-warm-reboot@{}.target.requires/obmc-host-force-warm-reboot@{}.target \
     obmc-chassis-poweroff@{}.target.wants/phosphor-clear-one-time@{}.service \
+    obmc-chassis-blackout@{}.target.wants/phosphor-reset-sensor-states@{}.service \
+    obmc-chassis-powerreset@{}.target.requires/obmc-reset-chassis-on@{}.service \
+    obmc-chassis-powerreset@{}.target.requires/obmc-reset-chassis-running@{}.service \
 "
 
 # TODO: There are some targets that are chassis oriented, but there is no

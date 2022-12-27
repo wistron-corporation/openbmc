@@ -122,6 +122,7 @@ RDEPENDS:packagegroup-meta-oe-bsp:remove:riscv64 = "efivar efibootmgr fwupd fwup
 RDEPENDS:packagegroup-meta-oe-bsp:remove:riscv32 = "efivar efibootmgr fwupd fwupd-efi"
 
 RDEPENDS:packagegroup-meta-oe-connectivity ="\
+    cyrus-sasl \
     gammu \
     gattlib \
     gensio \
@@ -221,7 +222,6 @@ RDEPENDS:packagegroup-meta-oe-dbs ="\
     psqlodbc \
     rocksdb \
     soci \
-    sqlite \
 "
 RDEPENDS:packagegroup-meta-oe-dbs:remove:libc-musl:powerpc = "rocksdb"
 
@@ -300,7 +300,6 @@ RDEPENDS:packagegroup-meta-oe-devtools ="\
     python3-distutils-extra \
     python3-pycups \
     rapidjson \
-    sip3 \
     squashfs-tools-ng \
     uftrace \
     unifex \

@@ -10,6 +10,8 @@ SRC_URI = "https://github.com/tpm2-software/${BPN}/releases/download/${PV}/${BPN
 
 SRC_URI[sha256sum] = "79f28899047defd6b4b72b7268dd56abf27774954022315f818c239af33e05bd"
 
+UPSTREAM_CHECK_URI = "https://github.com/tpm2-software/${BPN}/releases"
+
 inherit autotools-brokensep pkgconfig python3native
 
 EXTRA_OECONF += "--disable-ptool-checks"
@@ -25,10 +27,6 @@ do_compile:append() {
 }
 
 do_install:append() {
-    install -d ${D}${libdir}/pkcs11
-    install -d ${D}${datadir}/p11-kit
-    rm -f ${D}${libdir}/pkcs11/libtpm2_pkcs11.so
-
     cd ${S}/tools
     export PYTHONPATH="${D}${PYTHON_SITEPACKAGES_DIR}"
     ${PYTHON_PN} setup.py install --root="${D}" --prefix="${prefix}" --install-lib="${PYTHON_SITEPACKAGES_DIR}" --optimize=1 --skip-build
@@ -48,5 +46,7 @@ FILES:${PN} += "\
     ${datadir}/p11-kit/* \
     "
 
-RDEPENDS:${PN} = "tpm2-tools"
-RDEPENDS:${PN}-tools += "${PYTHON_PN}-setuptools ${PYTHON_PN}-pyyaml ${PYTHON_PN}-cryptography ${PYTHON_PN}-pyasn1-modules"
+INSANE_SKIP:${PN}   += "dev-so"
+
+RDEPENDS:${PN} = "p11-kit tpm2-tools "
+RDEPENDS:${PN}-tools = "${PYTHON_PN}-pyyaml ${PYTHON_PN}-cryptography ${PYTHON_PN}-pyasn1-modules"

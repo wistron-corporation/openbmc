@@ -1,4 +1,6 @@
 #
+# Copyright BitBake Contributors
+#
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
@@ -118,6 +120,9 @@ class SignatureGenerator(object):
         self.taskhash, self.unihash, self.unitaskhashes, self.tidtopn = hashes
 
     def save_unitaskhashes(self):
+        return
+
+    def copy_unitaskhashes(self, targetdir):
         return
 
     def set_setscene_tasks(self, setscene_tasks):
@@ -358,6 +363,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
     def save_unitaskhashes(self):
         self.unihash_cache.save(self.unitaskhashes)
 
+    def copy_unitaskhashes(self, targetdir):
+        self.unihash_cache.copyfile(targetdir)
+
     def dump_sigtask(self, fn, task, stampbase, runtime):
 
         tid = fn + ":" + task
@@ -419,7 +427,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
                 bb.error("Taskhash mismatch %s versus %s for %s" % (computed_taskhash, self.taskhash[tid], tid))
                 sigfile = sigfile.replace(self.taskhash[tid], computed_taskhash)
 
-        fd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(sigfile), prefix="sigtask.")
+        fd, tmpfile = bb.utils.mkstemp(dir=os.path.dirname(sigfile), prefix="sigtask.")
         try:
             with bb.compress.zstd.open(fd, "wt", encoding="utf-8", num_threads=1) as f:
                 json.dump(data, f, sort_keys=True, separators=(",", ":"), cls=SetEncoder)
@@ -1026,6 +1034,7 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
                             # If a dependent hash changed, might as well print the line above and then defer to the changes in
                             # that hash since in all likelyhood, they're the same changes this task also saw.
                             output = [output[-1]] + recout
+                            break
 
     a_taint = a_data.get('taint', None)
     b_taint = b_data.get('taint', None)

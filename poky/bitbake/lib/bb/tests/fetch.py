@@ -11,6 +11,7 @@ import hashlib
 import tempfile
 import collections
 import os
+import signal
 import tarfile
 from bb.fetch2 import URI
 from bb.fetch2 import FetchMethod
@@ -21,6 +22,24 @@ def skipIfNoNetwork():
     if os.environ.get("BB_SKIP_NETTESTS") == "yes":
         return unittest.skip("network test")
     return lambda f: f
+
+class TestTimeout(Exception):
+    pass
+
+class Timeout():
+
+    def __init__(self, seconds):
+        self.seconds = seconds
+
+    def handle_timeout(self, signum, frame):
+        raise TestTimeout("Test failed: timeout reached")
+
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        signal.alarm(0)
 
 class URITest(unittest.TestCase):
     test_uris = {
@@ -468,6 +487,7 @@ class MirrorUriTest(FetcherTest):
                 "http://.*/.* file:///someotherpath/downloads/"
 
     def test_urireplace(self):
+        self.d.setVar("FILESPATH", ".")
         for k, v in self.replaceuris.items():
             ud = bb.fetch.FetchData(k[0], self.d)
             ud.setup_localpath(self.d)
@@ -692,6 +712,11 @@ class FetcherLocalTest(FetcherTest):
                 flst.append(os.path.relpath(os.path.join(root, f), self.unpackdir))
         flst.sort()
         return flst
+
+    def test_local_checksum_fails_no_file(self):
+        self.d.setVar("SRC_URI", "file://404")
+        with self.assertRaises(bb.BBHandledException):
+            bb.fetch.get_checksum_file_list(self.d)
 
     def test_local(self):
         tree = self.fetchUnpack(['file://a', 'file://dir/c'])
@@ -920,6 +945,7 @@ class FetcherNetworkTest(FetcherTest):
 
     @skipIfNoNetwork()
     def test_fetch_file_mirror_of_mirror(self):
+        self.d.setVar("FILESPATH", ".")
         self.d.setVar("MIRRORS", "http://.*/.* file:///some1where/ file:///some1where/.* file://some2where/ file://some2where/.* https://downloads.yoctoproject.org/releases/bitbake")
         fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz"], self.d)
         os.mkdir(self.dldir + "/some2where")
@@ -1165,6 +1191,15 @@ class FetcherNetworkTest(FetcherTest):
         self.assertTrue(os.path.exists(os.path.join(repo_path, 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/ctest/README.md')), msg='Missing submodule checkout')
         self.assertTrue(os.path.exists(os.path.join(repo_path, 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/testrunner/readme.md')), msg='Missing submodule checkout')
 
+    @skipIfNoNetwork()
+    def test_git_submodule_reference_to_parent(self):
+        self.recipe_url = "gitsm://github.com/gflags/gflags.git;protocol=https;branch=master"
+        self.d.setVar("SRCREV", "14e1138441bbbb584160cb1c0a0426ec1bac35f1")
+        with Timeout(60):
+            fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+            with self.assertRaises(bb.fetch2.FetchError):
+                fetcher.download()
+
 class SVNTest(FetcherTest):
     def skipIfNoSvn():
         import shutil
@@ -1296,12 +1331,14 @@ class URLHandle(unittest.TestCase):
        "cvs://anoncvs:anonymous@cvs.handhelds.org/cvs;tag=V0-99-81;module=familiar/dist/ipkg" : ('cvs', 'cvs.handhelds.org', '/cvs', 'anoncvs', 'anonymous', collections.OrderedDict([('tag', 'V0-99-81'), ('module', 'familiar/dist/ipkg')])),
        "git://git.openembedded.org/bitbake;branch=@foo" : ('git', 'git.openembedded.org', '/bitbake', '', '', {'branch': '@foo'}),
        "file://somelocation;someparam=1": ('file', '', 'somelocation', '', '', {'someparam': '1'}),
+       r'git://s.o-me_ONE:!#$%^&*()-_={}[]\|:?,.<>~`@git.openembedded.org/bitbake;branch=main': ('git', 'git.openembedded.org', '/bitbake', 's.o-me_ONE', r'!#$%^&*()-_={}[]\|:?,.<>~`', {'branch': 'main'}),
     }
     # we require a pathname to encodeurl but users can still pass such urls to 
     # decodeurl and we need to handle them
     decodedata = datatable.copy()
     decodedata.update({
        "http://somesite.net;someparam=1": ('http', 'somesite.net', '/', '', '', {'someparam': '1'}),
+       "npmsw://some.registry.url;package=@pkg;version=latest": ('npmsw', 'some.registry.url', '/', '', '', {'package': '@pkg', 'version': 'latest'}),
     })
 
     def test_decodeurl(self):
@@ -1834,7 +1871,7 @@ class GitShallowTest(FetcherTest):
         self.add_empty_file('bsub', cwd=smdir)
 
         self.git('submodule init', cwd=self.srcdir)
-        self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
+        self.git('-c protocol.file.allow=always submodule add file://%s' % smdir, cwd=self.srcdir)
         self.git('submodule update', cwd=self.srcdir)
         self.git('commit -m submodule -a', cwd=self.srcdir)
 
@@ -1864,7 +1901,7 @@ class GitShallowTest(FetcherTest):
         self.add_empty_file('bsub', cwd=smdir)
 
         self.git('submodule init', cwd=self.srcdir)
-        self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
+        self.git('-c protocol.file.allow=always submodule add file://%s' % smdir, cwd=self.srcdir)
         self.git('submodule update', cwd=self.srcdir)
         self.git('commit -m submodule -a', cwd=self.srcdir)
 
@@ -2802,3 +2839,121 @@ class GitSharedTest(FetcherTest):
         fetcher.unpack(self.unpackdir)
         alt = os.path.join(self.unpackdir, 'git/.git/objects/info/alternates')
         self.assertFalse(os.path.exists(alt))
+
+
+class FetchPremirroronlyLocalTest(FetcherTest):
+
+    def setUp(self):
+        super(FetchPremirroronlyLocalTest, self).setUp()
+        self.mirrordir = os.path.join(self.tempdir, "mirrors")
+        os.mkdir(self.mirrordir)
+        self.reponame = "bitbake"
+        self.gitdir = os.path.join(self.tempdir, "git", self.reponame)
+        self.recipe_url = "git://git.fake.repo/bitbake"
+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
+        self.d.setVar("BB_NO_NETWORK", "1")
+        self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
+
+    def make_git_repo(self):
+        self.mirrorname = "git2_git.fake.repo.bitbake.tar.gz"
+        recipeurl = "git:/git.fake.repo/bitbake"
+        os.makedirs(self.gitdir)
+        self.git("init", self.gitdir)
+        for i in range(0):
+            self.git_new_commit()
+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
+
+    def git_new_commit(self):
+        import random
+        testfilename = "bibake-fetch.test"
+        os.unlink(os.path.join(self.mirrordir, self.mirrorname))
+        with open(os.path.join(self.gitdir, testfilename), "w") as testfile:
+            testfile.write("Useless random data {}".format(random.random()))
+        self.git("add {}".format(testfilename), self.gitdir)
+        self.git("commit -a -m \"This random commit {}. I'm useless.\"".format(random.random()), self.gitdir)
+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
+        return self.git("rev-parse HEAD", self.gitdir).strip()
+
+    def test_mirror_commit_nonexistent(self):
+        self.make_git_repo()
+        self.d.setVar("SRCREV", "0"*40)
+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+        with self.assertRaises(bb.fetch2.NetworkAccess):
+            fetcher.download()
+
+    def test_mirror_commit_exists(self):
+        self.make_git_repo()
+        self.d.setVar("SRCREV", self.git_new_commit())
+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+        fetcher.download()
+        fetcher.unpack(self.unpackdir)
+
+    def test_mirror_tarball_nonexistent(self):
+        self.d.setVar("SRCREV", "0"*40)
+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+        with self.assertRaises(bb.fetch2.NetworkAccess):
+            fetcher.download()
+
+class FetchPremirroronlyNetworkTest(FetcherTest):
+
+    def setUp(self):
+        super(FetchPremirroronlyNetworkTest, self).setUp()
+        self.mirrordir = os.path.join(self.tempdir, "mirrors")
+        os.mkdir(self.mirrordir)
+        self.reponame = "fstests"
+        self.clonedir = os.path.join(self.tempdir, "git")
+        self.gitdir = os.path.join(self.tempdir, "git", "{}.git".format(self.reponame))
+        self.recipe_url = "git://git.yoctoproject.org/fstests"
+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
+        self.d.setVar("BB_NO_NETWORK", "0")
+        self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
+
+    def make_git_repo(self):
+        import shutil
+        self.mirrorname = "git2_git.yoctoproject.org.fstests.tar.gz"
+        os.makedirs(self.clonedir)
+        self.git("clone --bare --shallow-since=\"01.01.2013\" {}".format(self.recipe_url), self.clonedir)
+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
+        shutil.rmtree(self.clonedir)
+
+    @skipIfNoNetwork()
+    def test_mirror_tarball_updated(self):
+        self.make_git_repo()
+        ## Upstream commit is in the mirror
+        self.d.setVar("SRCREV", "49d65d53c2bf558ae6e9185af0f3af7b79d255ec")
+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+        fetcher.download()
+
+    @skipIfNoNetwork()
+    def test_mirror_tarball_outdated(self):
+        self.make_git_repo()
+        ## Upstream commit not in the mirror
+        self.d.setVar("SRCREV", "15413486df1f5a5b5af699b6f3ba5f0984e52a9f")
+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+        with self.assertRaises(bb.fetch2.NetworkAccess):
+            fetcher.download()
+
+class FetchPremirroronlyBrokenTarball(FetcherTest):
+
+    def setUp(self):
+        super(FetchPremirroronlyBrokenTarball, self).setUp()
+        self.mirrordir = os.path.join(self.tempdir, "mirrors")
+        os.mkdir(self.mirrordir)
+        self.reponame = "bitbake"
+        self.gitdir = os.path.join(self.tempdir, "git", self.reponame)
+        self.recipe_url = "git://git.fake.repo/bitbake"
+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
+        self.d.setVar("BB_NO_NETWORK", "1")
+        self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
+        self.mirrorname = "git2_git.fake.repo.bitbake.tar.gz"
+        with open(os.path.join(self.mirrordir, self.mirrorname), 'w') as targz:
+            targz.write("This is not tar.gz file!")
+
+    def test_mirror_broken_download(self):
+        import sys
+        self.d.setVar("SRCREV", "0"*40)
+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+        with self.assertRaises(bb.fetch2.FetchError):
+            fetcher.download()
+        stdout = sys.stdout.getvalue()
+        self.assertFalse(" not a git repository (or any parent up to mount point /)" in stdout)

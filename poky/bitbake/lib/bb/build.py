@@ -20,6 +20,7 @@ import itertools
 import time
 import re
 import stat
+import datetime
 import bb
 import bb.msg
 import bb.process
@@ -571,7 +572,6 @@ def _task_data(fn, task, d):
     localdata.setVar('BB_FILENAME', fn)
     localdata.setVar('OVERRIDES', 'task-%s:%s' %
                      (task[3:].replace('_', '-'), d.getVar('OVERRIDES', False)))
-    localdata.finalize()
     bb.data.expandKeys(localdata)
     return localdata
 
@@ -618,7 +618,8 @@ def _exec_task(fn, task, d, quieterr):
     logorder = os.path.join(tempdir, 'log.task_order')
     try:
         with open(logorder, 'a') as logorderfile:
-            logorderfile.write('{0} ({1}): {2}\n'.format(task, os.getpid(), logbase))
+            timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+            logorderfile.write('{0} {1} ({2}): {3}\n'.format(timestamp, task, os.getpid(), logbase))
     except OSError:
         logger.exception("Opening log file '%s'", logorder)
         pass
@@ -835,11 +836,7 @@ def stamp_cleanmask_internal(taskname, d, file_name):
 
     return [cleanmask, cleanmask.replace(taskflagname, taskflagname + "_setscene")]
 
-def make_stamp(task, d, file_name = None):
-    """
-    Creates/updates a stamp for a given task
-    (d can be a data dict or dataCache)
-    """
+def clean_stamp(task, d, file_name = None):
     cleanmask = stamp_cleanmask_internal(task, d, file_name)
     for mask in cleanmask:
         for name in glob.glob(mask):
@@ -850,6 +847,14 @@ def make_stamp(task, d, file_name = None):
             if name.endswith('.taint'):
                 continue
             os.unlink(name)
+    return
+
+def make_stamp(task, d, file_name = None):
+    """
+    Creates/updates a stamp for a given task
+    (d can be a data dict or dataCache)
+    """
+    clean_stamp(task, d, file_name)
 
     stamp = stamp_internal(task, d, file_name)
     # Remove the file and recreate to force timestamp

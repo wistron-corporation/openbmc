@@ -54,7 +54,7 @@ occurred:
       when "pam" is in :term:`DISTRO_FEATURES`.
 
    -  The ``switch_root`` program is now packaged in a separate
-      "util-linux-switch-root" package for small initramfs images that
+      "util-linux-switch-root" package for small :term:`Initramfs` images that
       do not need the whole ``util-linux`` package or the busybox
       binary, which are both much larger than ``switch_root``. The main
       ``util-linux`` package has a recommended runtime dependency (i.e.
@@ -301,7 +301,7 @@ The following are additional changes:
    likely be removed in the next Yocto Project release.
 
 -  The ``vmdk``, ``vdi``, and ``qcow2`` image file types are now used in
-   conjunction with the "wic" image type through ``CONVERSION_CMD``.
+   conjunction with the "wic" image type through :term:`CONVERSION_CMD`.
    Consequently, the equivalent image types are now ``wic.vmdk``,
    ``wic.vdi``, and ``wic.qcow2``, respectively.
 

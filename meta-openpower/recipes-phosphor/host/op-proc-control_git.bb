@@ -11,7 +11,7 @@ inherit meson obmc-phosphor-utils pkgconfig
 inherit systemd
 
 SRC_URI += "git://github.com/openbmc/openpower-proc-control;branch=master;protocol=https"
-SRCREV = "f2e53726607d66713af503541e869565b698b912"
+SRCREV = "0f27ee37b567411784a5b49f9046f9a855400125"
 
 DEPENDS += " \
         phosphor-logging \
@@ -23,6 +23,13 @@ EXTRA_OEMESON += "-Dtests=disabled"
 
 # For libpdbg, provided by the pdbg package
 DEPENDS += "pdbg"
+
+PACKAGECONFIG ??= "${@bb.utils.filter('OBMC_MACHINE_FEATURES', 'phal op-fsi', d)}"
+PACKAGECONFIG[phal] = "-Dphal=enabled, -Dphal=disabled -Dp9=enabled, ipl pdata"
+PACKAGECONFIG[op-fsi] = "-Dopenfsi=enabled, -Dopenfsi=disabled"
+
+# By default all openpower systems support op-fsi
+PACKAGECONFIG = " op-fsi"
 
 TEMPLATE = "pcie-poweroff@.service"
 INSTANCE_FORMAT = "pcie-poweroff@{}.service"
@@ -45,4 +52,5 @@ SYSTEMD_SERVICE:${PN} +=  " \
         ${@bb.utils.contains('MACHINE_FEATURES', 'phal', 'set-spi-mux.service', '', d)} \
         ${@bb.utils.contains('MACHINE_FEATURES', 'phal', 'phal-create-boottime-guard-indicator.service', '', d)} \
         ${@bb.utils.contains('MACHINE_FEATURES', 'phal', 'op-clear-sys-dump-active@.service', '', d)} \
+        ${@bb.utils.contains('MACHINE_FEATURES', 'phal', 'op-clock-data-logger@.service', '', d)} \
         "

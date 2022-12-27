@@ -24,7 +24,7 @@ software customizations and build interchange for multiple hardware
 platforms as well as software stacks that can be maintained and scaled.
 
 .. image:: figures/key-dev-elements.png
-    :align: center
+    :width: 100%
 
 For further introductory information on the Yocto Project, you might be
 interested in this
@@ -584,20 +584,15 @@ Build Host runs, you have several choices.
    ":ref:`dev-manual/start:setting up to use cross platforms (crops)`"
    section in the Yocto Project Development Tasks Manual.
 
--  *Windows Subsystem For Linux (WSLv2):* You may use Windows Subsystem
-   For Linux v2 to set up a Build Host using Windows 10.
+-  *Windows Subsystem For Linux (WSL 2):* You may use Windows Subsystem
+   For Linux version 2 to set up a Build Host using Windows 10 or later,
+   or Windows Server 2019 or later.
 
-   .. note::
-
-      The Yocto Project is not compatible with WSLv1, it is compatible
-      but not officially supported nor validated with WSLv2, if you
-      still decide to use WSL please upgrade to WSLv2.
-
-   The Windows Subsystem For Linux allows Windows 10 to run a real Linux
+   The Windows Subsystem For Linux allows Windows to run a real Linux
    kernel inside of a lightweight virtual machine (VM).
 
-   For information on how to set up a Build Host with WSLv2, see the
-   ":ref:`dev-manual/start:setting up to use windows subsystem for linux (wslv2)`"
+   For information on how to set up a Build Host with WSL 2, see the
+   ":ref:`dev-manual/start:setting up to use windows subsystem for linux (wsl 2)`"
    section in the Yocto Project Development Tasks Manual.
 
 -  *Toaster:* Regardless of what your Build Host is running, you can use
@@ -638,7 +633,7 @@ these items that make up the Poky repository in the
 The following figure illustrates what generally comprises Poky:
 
 .. image:: figures/poky-reference-distribution.png
-    :align: center
+    :width: 100%
 
 -  BitBake is a task executor and scheduler that is the heart of the
    OpenEmbedded build system.
@@ -688,8 +683,8 @@ Sato.
 
 One of the most powerful properties of Poky is that every aspect of a
 build is controlled by the metadata. You can use metadata to augment
-these base image types by adding metadata
-`layers <overview-manual/yp-intro:the yocto project layer model>` that extend
+these base image types by adding metadata :ref:`layers
+<overview-manual/yp-intro:the yocto project layer model>` that extend
 functionality.
 These layers can provide, for example, an additional software stack for
 an image type, add a board support package (BSP) for additional
@@ -720,7 +715,7 @@ accomplish image and SDK generation. The following figure overviews that
 workflow:
 
 .. image:: figures/YP-flow-diagram.png
-    :align: center
+    :width: 100%
 
 Following is a brief summary of the "workflow":
 
@@ -842,7 +837,7 @@ helpful for getting started:
    distribution.
 
    Another point worth noting is that historically within the Yocto
-   Project, recipes were referred to as packages - thus, the existence
+   Project, recipes were referred to as packages --- thus, the existence
    of several BitBake variables that are seemingly mis-named, (e.g.
    :term:`PR`,
    :term:`PV`, and

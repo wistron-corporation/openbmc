@@ -1,9 +1,9 @@
-LINUX_VERSION ?= "5.15.34"
+LINUX_VERSION ?= "5.15.56"
 LINUX_RPI_BRANCH ?= "rpi-5.15.y"
 LINUX_RPI_KMETA_BRANCH ?= "yocto-5.15"
 
-SRCREV_machine = "0086da6acd41600d47b87b05874f99704216426f"
-SRCREV_meta = "e1b976ee4fb5af517cf01a9f2dd4a32f560ca894"
+SRCREV_machine = "a90998a3e549911234f9f707050858b98b71360f"
+SRCREV_meta = "3b1dc2f1fcd869f97901402759b859035984aa7f"
 
 KMETA = "kernel-meta"
 
@@ -17,3 +17,15 @@ SRC_URI = " \
 require linux-raspberrypi.inc
 
 KERNEL_DTC_FLAGS += "-@ -H epapr"
+
+RDEPENDS:${KERNEL_PACKAGE_NAME}:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-base:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}-base"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-image:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}-image"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-dev:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}-dev"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-vmlinux:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}-vmlinux"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-modules:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}-modules"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-dbg:raspberrypi-armv7:append = " ${RASPBERRYPI_v7_KERNEL_PACKAGE_NAME}-dbg"
+
+DEPLOYDEP = ""
+DEPLOYDEP:raspberrypi-armv7 = "${RASPBERRYPI_v7_KERNEL}:do_deploy"
+do_deploy[depends] += "${DEPLOYDEP}"

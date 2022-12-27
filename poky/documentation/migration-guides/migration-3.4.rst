@@ -22,7 +22,7 @@ syntax, so the following::
 
    SRC_URI_append = " file://somefile"
    SRC_URI_append_qemux86 = " file://somefile2"
-   SRC_URI_remove_qemux86-64 = " file://somefile3"
+   SRC_URI_remove_qemux86-64 = "file://somefile3"
    SRC_URI_prepend_qemuarm = "file://somefile4 "
    FILES_${PN}-ptest = "${bindir}/xyz"
    IMAGE_CMD_tar = "tar"
@@ -34,7 +34,7 @@ would now become::
 
    SRC_URI:append = " file://somefile"
    SRC_URI:append:qemux86 = " file://somefile2"
-   SRC_URI:remove:qemux86-64 = " file://somefile3"
+   SRC_URI:remove:qemux86-64 = "file://somefile3"
    SRC_URI:prepend:qemuarm = "file://somefile4 "
    FILES:${PN}-ptest = "${bindir}/xyz"
    IMAGE_CMD:tar = "tar"
@@ -146,7 +146,7 @@ Virtual runtime provides
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Recipes shouldn't use the ``virtual/`` string in :term:`RPROVIDES` and
-:term:`RDEPENDS` - it is confusing because ``virtual/`` has no special
+:term:`RDEPENDS` --- it is confusing because ``virtual/`` has no special
 meaning in :term:`RPROVIDES` and :term:`RDEPENDS` (unlike in the
 corresponding build-time :term:`PROVIDES` and :term:`DEPENDS`).
 
@@ -171,7 +171,7 @@ Extensible SDK host extension
 For a normal SDK, some layers append to :term:`TOOLCHAIN_HOST_TASK`
 unconditionally which is fine, until the eSDK tries to override the
 variable to its own values. Instead of installing packages specified
-in this variable it uses native recipes instead - a very different
+in this variable it uses native recipes instead --- a very different
 approach. This has led to confusing errors when binaries are added
 to the SDK but not relocated.
 
@@ -206,7 +206,7 @@ Package/recipe splitting
 Image / SDK generation changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Recursive dependencies on the ``do_build`` task are now disabled when
+- Recursive dependencies on the :ref:`ref-tasks-build` task are now disabled when
   building SDKs. These are generally not needed; in the unlikely event
   that you do encounter problems then it will probably be as a result of
   missing explicit dependencies that need to be added.
@@ -233,7 +233,7 @@ Image / SDK generation changes
 Miscellaneous
 ~~~~~~~~~~~~~
 
-- Certificates are now properly checked when bitbake fetches sources
+- Certificates are now properly checked when BitBake fetches sources
   over HTTPS. If you receive errors as a result for your custom recipes,
   you will need to use a mirror or address the issue with the operators
   of the server in question.
@@ -252,7 +252,7 @@ Miscellaneous
 
 - The previously deprecated ``COMPRESS_CMD`` and
   ``CVE_CHECK_CVE_WHITELIST`` variables have been removed. Use
-  ``CONVERSION_CMD`` and ``CVE_CHECK_WHITELIST`` (replaced by
+  :term:`CONVERSION_CMD` and ``CVE_CHECK_WHITELIST`` (replaced by
   :term:`CVE_CHECK_IGNORE` in version 3.5) respectively
   instead.
 

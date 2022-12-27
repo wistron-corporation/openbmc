@@ -13,10 +13,9 @@ Minimum system requirements
 You will now need at least Python 3.6 installed on your build host. Most recent
 distributions provide this, but should you be building on a distribution that
 does not have it, you can use the ``buildtools-tarball`` (easily installable
-using ``scripts/install-buildtools``) - see
-:ref:`ref-manual/system-requirements:required git, tar, python and gcc versions`
+using ``scripts/install-buildtools``) --- see
+:ref:`ref-manual/system-requirements:required git, tar, python, make and gcc versions`
 for details.
-
 
 .. _migration-3.3-removed-recipes:
 
@@ -76,7 +75,7 @@ Some example recipes where this change has been made: ``gpgme``, ``libcap-ng``,
 
 .. _migration-3.3-distutils-path:
 
-``setup.py`` path for python modules
+``setup.py`` path for Python modules
 ------------------------------------
 
 In a Python module, sometimes ``setup.py`` can be buried deep in the
@@ -133,7 +132,7 @@ unless you want to take advantage of the improved granularity:
 - ``procps``: split ``ps`` and ``sysctl`` into their own packages
 - ``rpm``: split build and extra functionality into separate packages
 - ``sudo``: split ``sudo`` binary into ``sudo-sudo`` and libs into ``sudo-lib``
-- ``systemtap``: examples, python scripts and runtime material split out
+- ``systemtap``: examples, Python scripts and runtime material split out
 - ``util-linux``: ``libuuid`` has been split out to its own
   ``util-linux-libuuid`` recipe (and corresponding packages) to avoid circular
   dependencies if ``libgcrypt`` support is enabled in ``util-linux``.

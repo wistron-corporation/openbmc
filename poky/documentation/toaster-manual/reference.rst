@@ -28,8 +28,7 @@ at :oe_layerindex:`/`. You can find the code for this
 layer index's web application at :yocto_git:`/layerindex-web/`.
 
 When you tie a layer source into Toaster, it can query the layer source
-through a
-`REST <https://en.wikipedia.org/wiki/Representational_state_transfer>`__
+through a :wikipedia:`REST <Representational_state_transfer>`
 API, store the information about the layers in the Toaster database, and
 then show the information to users. Users are then able to view that
 information and build layers from Toaster itself without having to
@@ -369,8 +368,8 @@ Remote Toaster Monitoring
 Toaster has an API that allows remote management applications to
 directly query the state of the Toaster server and its builds in a
 machine-to-machine manner. This API uses the
-`REST <https://en.wikipedia.org/wiki/Representational_state_transfer>`__
-interface and the transfer of JSON files. For example, you might monitor
+:wikipedia:`REST <Representational_state_transfer>` interface and the
+transfer of JSON files. For example, you might monitor
 a build inside a container through well supported known HTTP ports in
 order to easily access a Toaster server inside the container. In this
 example, when you use this direct JSON API, you avoid having web page
@@ -522,14 +521,13 @@ tasks. You can locate these commands in the
 
    -  When using ``manage.py`` commands given a default configuration,
       you must be sure that your working directory is set to the
-      :term:`Build Directory`. Using
-      ``manage.py`` commands from the Build Directory allows Toaster to
-      find the ``toaster.sqlite`` file, which is located in the Build
-      Directory.
+      :term:`Build Directory`. Using ``manage.py`` commands from the
+      :term:`Build Directory` allows Toaster to find the ``toaster.sqlite``
+      file, which is located in the :term:`Build Directory`.
 
    -  For non-default database configurations, it is possible that you
       can use ``manage.py`` commands from a directory other than the
-      Build Directory. To do so, the ``toastermain/settings.py`` file
+      :term:`Build Directory`. To do so, the ``toastermain/settings.py`` file
       must be configured to point to the correct database backend.
 
 ``buildslist``
@@ -549,7 +547,7 @@ database.
 You need to run the ``buildslist`` command first to identify existing
 builds in the database before using the
 :ref:`toaster-manual/reference:\`\`builddelete\`\`` command. Here is an
-example that assumes default repository and build directory names:
+example that assumes default repository and :term:`Build Directory` names:
 
 .. code-block:: shell
 

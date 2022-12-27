@@ -61,7 +61,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0e5cd938de1a7a53ea5adac38cc10c39 \
 "
 
 # libtool is needed for libltdl, used in module loading.
-DEPENDS = "libatomic-ops libsndfile1 libtool"
+DEPENDS = "m4-native libatomic-ops libsndfile1 libtool"
 # optional
 DEPENDS += "udev alsa-lib glib-2.0"
 DEPENDS += "speexdsp libxml-parser-perl-native libcap"
@@ -213,7 +213,7 @@ pkg_postinst:${PN}-server() {
 }
 
 python populate_packages:prepend() {
-    plugindir = d.expand('${libdir}/pulse-${PV}/modules/')
+    plugindir = d.expand('${libdir}/pulseaudio/modules/')
     do_split_packages(d, plugindir, r'^module-(.*)\.so$', '${PN}-module-%s', 'PulseAudio module for %s', extra_depends='', prepend=True)
     do_split_packages(d, plugindir, r'^lib(.*)\.so$', '${PN}-lib-%s', 'PulseAudio library for %s', extra_depends='', prepend=True)
 }
